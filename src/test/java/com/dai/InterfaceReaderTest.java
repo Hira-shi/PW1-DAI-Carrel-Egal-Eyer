@@ -16,6 +16,13 @@ import static org.junit.Assert.*;
 /**
  * Utilisation de l'IA ici je ne suis pas assez bon pour ecrire tous ca
  */
+
+/**
+ * @brief Test class for InterfaceReader
+ *
+ * This class contains unit tests for the InterfaceReader class.
+ *
+ */
 public class InterfaceReaderTest {
     @TempDir
     Path tempDir;
