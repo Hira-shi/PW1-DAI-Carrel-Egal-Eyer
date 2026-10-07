@@ -10,8 +10,7 @@ import java.util.Map;
 import org.apache.tika.Tika;
 import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -32,4 +31,30 @@ public class InterfaceReaderTest {
         assertTrue(ret.get("text/plain").contains("This is a test file"));
         assertEquals("This is a test file.", ret.get("text/plain"));
     }
+
+    @Test
+    void returnsMetadataForEmptyFile() throws IOException {
+        Path file = tempDir.resolve("empty.txt");
+        Files.writeString(file, "");
+
+        Map<String, String> ret = reader.read(file);
+        assertEquals("", ret.get("text/plain"));
+    }
+
+    @Test
+    void throwsWhenFileDoesNotExist() {
+        Path file = tempDir.resolve("nonexistent.txt");
+
+        assertThrows(IOException.class, () -> reader.read(file));
+    }
+
+    @Test
+    void detectsTypeFromContentNotOnlyFromExtension() throws IOException {
+        Path file = tempDir.resolve("test.html");
+        Files.writeString(file, "<html><body>This is a test file.</body></html>");
+
+        Map<String, String> ret = reader.read(file);
+        assertEquals("This is a test file.", ret.get("text/plain"));
+    }
+
 }
