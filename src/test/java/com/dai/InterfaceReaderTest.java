@@ -7,14 +7,14 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.Map;
 
-import org.apache.tika.Tika;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.Assert.*;
 
 
 /**
- * Utilisation de l'IA ici je ne suis pas assez bon pour ecrire tous ca
+ * Utilisation de l'IA ici je ne suis pas assez bon pour ecrire tous ca et surtout la correction
+ * de mes erreurs
  */
 
 /**
