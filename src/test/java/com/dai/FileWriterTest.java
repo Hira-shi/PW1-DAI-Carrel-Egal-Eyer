@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileWriterTest {
     private static final String HEADER = "title,author,date,album";
 
+    private static final String pathToCSVFile = "meta.csv";
+
     private final String author = "Yoko Suzuki";
     private final String album = "Japanese Piano";
     private final String title = "Merry Christmas Mr.Lawrence";
@@ -72,7 +74,7 @@ public class FileWriterTest {
 //    Création et ajout
     @Test
     public void createsCsvWithHeaderWhenFileDoesNotExist() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
         assertFalse(Files.exists(file));
 
         writer.write(file, createMeta(title, author, date, album));
@@ -84,7 +86,7 @@ public class FileWriterTest {
 
     @Test
     public void appendsNewLineForEachWrite() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
 
         writer.write(file, createMeta(title, author, date, album));
         writer.write(file, createMeta(title2, author2, date2, album2));
@@ -99,7 +101,7 @@ public class FileWriterTest {
 
     @Test
     public void keepsExistingLinesAndDoesNotRewriteHeader() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
         Files.writeString(file, HEADER + "\n" + csv3 + "\n");
 
         writer.write(file, createMeta(title4, author4, date4, album4));
@@ -115,7 +117,7 @@ public class FileWriterTest {
 //    Contenu de la ligne
     @Test
     public void writesEmptyValueForMissingField() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
         MetaDTO meta = new MetaDTO();
         meta.set(MetaDTO.TITLE, title);
 
@@ -127,7 +129,7 @@ public class FileWriterTest {
 
     @Test
     public void writesFieldsInHeaderOrder() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
         MetaDTO meta = new MetaDTO();
         meta.set(MetaDTO.ALBUM, album);
         meta.set(MetaDTO.TITLE, title);
@@ -142,7 +144,7 @@ public class FileWriterTest {
 
     @Test
     public void quotesValueContainingComma() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
 
         writer.write(file, createMeta(title, author, date, album));
 
@@ -157,7 +159,7 @@ public class FileWriterTest {
 
     @Test
     public void releasesFileHandleAfterWriting() throws IOException {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
 
         writer.write(file, createMeta(title, author, date, album));
 
@@ -169,7 +171,7 @@ public class FileWriterTest {
 //    Cas d'erreur
     @Test
     public void throwsWhenParentDirectoryDoesNotExist() {
-        Path file = tempDir.resolve("missing").resolve("meta.csv");
+        Path file = tempDir.resolve("missing").resolve(pathToCSVFile);
 
         assertThrows(IOException.class, () -> writer.write(file, createMeta(title, author, date, album)));
     }
@@ -186,7 +188,7 @@ public class FileWriterTest {
 
     @Test
     public void throwsWhenMetaIsNull() {
-        Path file = tempDir.resolve("meta.csv");
+        Path file = tempDir.resolve(pathToCSVFile);
 
         assertThrows(NullPointerException.class, () -> writer.write(file, null));
     }
