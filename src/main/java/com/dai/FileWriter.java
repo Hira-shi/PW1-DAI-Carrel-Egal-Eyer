@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public class FileWriter {
     // @TODO
-    public void write(StringWriter strWriter, MetaDTO meta) throws IOException {
+    public void write(StringWriter strWriter, MetaDTO meta, boolean writesHeaderWhenRequested) throws IOException {
     }
 
     public void writeHeader(StringWriter out) {

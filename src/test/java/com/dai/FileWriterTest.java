@@ -8,7 +8,7 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Utilisation de l'IA pour les corrections et la doc
+ * Utilisation de l'IA (claude) pour les corrections et la doc
  *
  * <p>Tests unitaires de {@link FileWriter}, qui écrit des {@link MetaDTO} sous forme
  * de lignes CSV ({@code title,author,date,album}).</p>
@@ -101,42 +101,42 @@ public class FileWriterTest {
 //    Cas de base
 
     /**
-     * L'en-tête contient les noms des colonnes, suivis d'une fin de ligne.
+     * Avec {@code withHeader = true}, l'en-tête est écrit avant la ligne du DTO.
      */
     @Test
-    public void writesHeader() throws IOException {
+    public void writesHeaderWhenRequested() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.writeHeader(out);
+        writer.write(out, createMeta(title, author, date, album), true);
 
-        assertEquals(HEADER + newLine, out.toString());
+        assertEquals(HEADER + newLine + csv1 + newLine, out.toString());
     }
 
     /**
-     * Un DTO complet donne une seule ligne CSV, terminée par une fin de ligne.
+     * Avec {@code withHeader = false}, seule la ligne du DTO est écrite,
+     * terminée par une fin de ligne.
      */
     @Test
-    public void writesOneLine() throws IOException {
+    public void writesOneLineWithoutHeader() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.write(out, createMeta(title, author, date, album));
+        writer.write(out, createMeta(title, author, date, album), false);
 
         assertEquals(csv1 + newLine, out.toString());
     }
 
     /**
-     * Plusieurs écritures dans le même writer donnent l'en-tête puis une ligne
-     * par DTO, dans l'ordre d'écriture.
+     * Plusieurs écritures dans le même writer donnent l'en-tête (une seule fois)
+     * puis une ligne par DTO, dans l'ordre d'écriture.
      */
     @Test
-    public void writesHeaderThenLinesInOrder() throws IOException {
+    public void writesHeaderOnceThenLinesInOrder() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.writeHeader(out);
-        writer.write(out, createMeta(title, author, date, album));
-        writer.write(out, createMeta(title2, author2, date2, album2));
-        writer.write(out, createMeta(title3, author3, date3, album3));
-        writer.write(out, createMeta(title4, author4, date4, album4));
+        writer.write(out, createMeta(title, author, date, album), true);
+        writer.write(out, createMeta(title2, author2, date2, album2), false);
+        writer.write(out, createMeta(title3, author3, date3, album3), false);
+        writer.write(out, createMeta(title4, author4, date4, album4), false);
 
         String expected = HEADER + newLine +
                 csv1 + newLine +
@@ -159,7 +159,7 @@ public class FileWriterTest {
         meta.set(MetaDTO.AUTHOR, author);
         meta.set(MetaDTO.TITLE, title);
 
-        writer.write(out, meta);
+        writer.write(out, meta, false);
 
         assertEquals(csv1 + newLine, out.toString());
     }
@@ -178,7 +178,7 @@ public class FileWriterTest {
         meta.set(MetaDTO.AUTHOR, author);
         meta.set(MetaDTO.ALBUM, album);
 
-        writer.write(out, meta);
+        writer.write(out, meta, false);
 
         // la date manque : case vide entre l'auteur et l'album
         String expected = title + separator + author + separator + separator + album;
@@ -192,7 +192,7 @@ public class FileWriterTest {
     public void writesEmptyColumnsForEmptyMeta() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.write(out, new MetaDTO());
+        writer.write(out, new MetaDTO(), false);
 
         String expected = "" + separator + separator + separator;
         assertEquals(expected + newLine, out.toString());
@@ -206,7 +206,7 @@ public class FileWriterTest {
     public void quotesValueContainingComma() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.write(out, createMeta(title, author, date, album));
+        writer.write(out, createMeta(title, author, date, album), false);
 
         // title5 contient une virgule : il doit être entouré de guillemets
         String expected = "\"" + title + "\"" +
@@ -223,7 +223,7 @@ public class FileWriterTest {
      */
     @Test
     public void throwsWhenWriterIsNull() {
-        assertThrows(NullPointerException.class, () -> writer.write(null, createMeta(title, author, date, album)));
+        assertThrows(NullPointerException.class, () -> writer.write(null, createMeta(title, author, date, album), false));
     }
 
     /**
@@ -233,6 +233,6 @@ public class FileWriterTest {
     public void throwsWhenMetaIsNull() {
         StringWriter out = new StringWriter();
 
-        assertThrows(NullPointerException.class, () -> writer.write(out, null));
+        assertThrows(NullPointerException.class, () -> writer.write(out, null, false));
     }
 }
