@@ -1,19 +1,20 @@
 package com.dai;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
+import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Utilisation de l'IA pour les corrections
+ *
+ * Tests de FileWriter entièrement en mémoire : on écrit dans un StringWriter
+ * et on compare le texte produit, sans aucun fichier sur le disque.
+ */
 public class FileWriterTest {
     private static final String HEADER = "title,author,date,album";
-
-    private static final String pathToCSVFile = "meta.csv";
 
     private final String author = "Yoko Suzuki";
     private final String album = "Japanese Piano";
@@ -35,7 +36,10 @@ public class FileWriterTest {
     private final String title4 = "Dearly Beloved";
     private final String date4 = "2002-03-22";
 
+
     private final char separator = ',';
+    // Toujours "\n", quel que soit l'OS, pour que le CSV soit identique partout
+    private final String newLine = "\n";
 
     private final String csv1 = title +
             separator + author +
@@ -57,9 +61,6 @@ public class FileWriterTest {
             separator + date4 +
             separator + album4;
 
-    @TempDir
-    Path tempDir;
-
     private final FileWriter writer = new FileWriter();
 
     private MetaDTO createMeta(String title, String author, String date, String album) {
@@ -71,125 +72,107 @@ public class FileWriterTest {
         return meta;
     }
 
-//    Création et ajout
+//    Cas de base
     @Test
-    public void createsCsvWithHeaderWhenFileDoesNotExist() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
-        assertFalse(Files.exists(file));
+    public void writesHeader() throws IOException {
+        StringWriter out = new StringWriter();
 
-        writer.write(file, createMeta(title, author, date, album));
+        writer.writeHeader(out);
 
-
-        List<String> lines = Files.readAllLines(file);
-        assertEquals(List.of(HEADER, csv1), lines);
+        assertEquals(HEADER + newLine, out.toString());
     }
 
     @Test
-    public void appendsNewLineForEachWrite() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
+    public void writesOneLine() throws IOException {
+        StringWriter out = new StringWriter();
 
-        writer.write(file, createMeta(title, author, date, album));
-        writer.write(file, createMeta(title2, author2, date2, album2));
+        writer.write(out, createMeta(title, author, date, album));
 
-        List<String> lines = Files.readAllLines(file);
-        assertEquals(List.of(
-                HEADER,
-                csv1,
-                csv2
-        ), lines);
+        assertEquals(csv1 + newLine, out.toString());
     }
 
     @Test
-    public void keepsExistingLinesAndDoesNotRewriteHeader() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
-        Files.writeString(file, HEADER + "\n" + csv3 + "\n");
+    public void writesHeaderThenLinesInOrder() throws IOException {
+        StringWriter out = new StringWriter();
 
-        writer.write(file, createMeta(title4, author4, date4, album4));
+        writer.writeHeader(out);
+        writer.write(out, createMeta(title, author, date, album));
+        writer.write(out, createMeta(title2, author2, date2, album2));
+        writer.write(out, createMeta(title3, author3, date3, album3));
+        writer.write(out, createMeta(title4, author4, date4, album4));
 
-        List<String> lines = Files.readAllLines(file);
-        assertEquals(List.of(
-                HEADER,
-                csv3,
-                csv4
-        ), lines);
-    }
-
-//    Contenu de la ligne
-    @Test
-    public void writesEmptyValueForMissingField() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
-        MetaDTO meta = new MetaDTO();
-        meta.set(MetaDTO.TITLE, title);
-
-        writer.write(file, meta);
-
-        String expected = title + separator + separator + separator;
-        assertEquals(expected, Files.readAllLines(file).get(1));
+        String expected = HEADER + newLine +
+                csv1 + newLine +
+                csv2 + newLine +
+                csv3 + newLine +
+                csv4 + newLine;
+        assertEquals(expected, out.toString());
     }
 
     @Test
     public void writesFieldsInHeaderOrder() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
+        StringWriter out = new StringWriter();
         MetaDTO meta = new MetaDTO();
         meta.set(MetaDTO.ALBUM, album);
+        meta.set(MetaDTO.DATE, date);
+        meta.set(MetaDTO.AUTHOR, author);
+        meta.set(MetaDTO.TITLE, title);
+
+        writer.write(out, meta);
+
+        assertEquals(csv1 + newLine, out.toString());
+    }
+
+//    Cas limites
+    @Test
+    public void writesEmptyValueForMissingField() throws IOException {
+        StringWriter out = new StringWriter();
+        MetaDTO meta = new MetaDTO();
         meta.set(MetaDTO.TITLE, title);
         meta.set(MetaDTO.AUTHOR, author);
+        meta.set(MetaDTO.ALBUM, album);
 
-        writer.write(file, meta);
+        writer.write(out, meta);
 
         // la date manque : case vide entre l'auteur et l'album
         String expected = title + separator + author + separator + separator + album;
-        assertEquals(expected, Files.readAllLines(file).get(1));
+        assertEquals(expected + newLine, out.toString());
+    }
+
+    @Test
+    public void writesEmptyColumnsForEmptyMeta() throws IOException {
+        StringWriter out = new StringWriter();
+
+        writer.write(out, new MetaDTO());
+
+        String expected = "" + separator + separator + separator;
+        assertEquals(expected + newLine, out.toString());
     }
 
     @Test
     public void quotesValueContainingComma() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
+        StringWriter out = new StringWriter();
 
-        writer.write(file, createMeta(title, author, date, album));
+        writer.write(out, createMeta(title, author, date, album));
 
         // title5 contient une virgule : il doit être entouré de guillemets
         String expected = "\"" + title + "\"" +
                 separator + author +
-                separator + separator +
+                separator + date +
                 separator + album;
-        assertEquals(expected, Files.readAllLines(file).get(1));
-    }
-
-
-    @Test
-    public void releasesFileHandleAfterWriting() throws IOException {
-        Path file = tempDir.resolve(pathToCSVFile);
-
-        writer.write(file, createMeta(title, author, date, album));
-
-        // échoue sous Windows si le flux n'a pas été fermé
-        Files.delete(file);
-        assertFalse(Files.exists(file));
+        assertEquals(expected + newLine, out.toString());
     }
 
 //    Cas d'erreur
     @Test
-    public void throwsWhenParentDirectoryDoesNotExist() {
-        Path file = tempDir.resolve("missing").resolve(pathToCSVFile);
-
-        assertThrows(IOException.class, () -> writer.write(file, createMeta(title, author, date, album)));
-    }
-
-    @Test
-    public void throwsWhenPathIsDirectory() {
-        assertThrows(IOException.class, () -> writer.write(tempDir, createMeta(title, author, date, album)));
-    }
-
-    @Test
-    public void throwsWhenPathIsNull() {
+    public void throwsWhenWriterIsNull() {
         assertThrows(NullPointerException.class, () -> writer.write(null, createMeta(title, author, date, album)));
     }
 
     @Test
     public void throwsWhenMetaIsNull() {
-        Path file = tempDir.resolve(pathToCSVFile);
+        StringWriter out = new StringWriter();
 
-        assertThrows(NullPointerException.class, () -> writer.write(file, null));
+        assertThrows(NullPointerException.class, () -> writer.write(out, null));
     }
 }
