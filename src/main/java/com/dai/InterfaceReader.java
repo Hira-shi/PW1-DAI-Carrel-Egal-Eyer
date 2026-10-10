@@ -5,11 +5,14 @@
 package com.dai;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.HashMap;
-import java.nio.file.Files;
 import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import java.io.InputStream;
 
 
@@ -19,47 +22,23 @@ import java.io.InputStream;
  */
 public class InterfaceReader {
 
-    private final Tika tika = new Tika(); // final empêche de réattribuer l'objet.
+    private final Tika tika = new Tika();
+    private final Parser parser = new AutoDetectParser();
+
     /**
-    * @brief Détecte le type MIME d'un fichier et prépare l'extraction de son contenu.
-            * <p>
-            * Cette méthode vérifie en premier l'existence du fichier cible, puis ouvre un flux
-            * d'entrée Java I/O (InputStream) pour identifier son format à l'aide d'Apache Tika.
-            * Le flux est automatiquement fermé à la fin de l'analyse (try-with-resources).
-            *
-            * @param file Le chemin (Path) vers le fichier source à analyser.
-            * @return Une Map contenant le type MIME détecté comme clé et le contenu extrait comme valeur (vide pour l'instant).
-            *
-            * @throws IOException Si le fichier spécifié n'existe pas ou en cas d'erreur lors de l'ouverture du flux I/O.
-            */
-    public Map<String, String> read(Path file) throws IOException {
-
-        if (!Files.exists(file)) {
-            throw new IOException("Le fichier n'existe pas : " + file.toString());
+     * @brief Extrait les métadonnées structurées d'un flux vers un {@link MetaDTO}.
+     *
+     * @param in le flux du fichier source (déjà ouvert)
+     * @return le DTO des métadonnées extraites (peut être vide)
+     * @throws IOException si le flux ne peut pas être lu ou analysé
+     */
+    public MetaDTO extractMetadata(InputStream in) throws IOException {
+        Metadata metadata = new Metadata();
+        try {
+            parser.parse(in, new DefaultHandler(), metadata, new ParseContext());
+        } catch (SAXException | TikaException e) {
+            throw new IOException("Échec de l'extraction des métadonnées : " + e.getMessage(), e);
         }
-
-
-        Map<String, String> result = new HashMap<>();
-        String mimeType = "application/octet-stream";
-        String content = "";
-
-        // Reconnaissance du format et géré via Java I/O
-        try (InputStream is = Files.newInputStream(file)) {
-            mimeType = tika.detect(is, file.getFileName().toString());
-        } catch (Exception e) {}
-
-        // Extraction du contenu géré via Java I/O
-        try (InputStream is = Files.newInputStream(file)) {
-            content = tika.parseToString(is);
-            if (content != null) {
-                content = content.trim(); // pour le test
-            }
-        } catch (Exception e) {
-            content = ""; // Pour le test "returnsMetadataForEmptyFile" attend une chaîne vide
-        }
-
-
-        result.put(mimeType, content); //
-        return result;
+        return MetadataMapper.toDTO(metadata);
     }
 }
