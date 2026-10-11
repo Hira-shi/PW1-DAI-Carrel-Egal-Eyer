@@ -46,6 +46,8 @@ public class FileWriterTest {
     private final String title4 = "Dearly Beloved";
     private final String date4 = "2002-03-22";
 
+    private final String title5 = "Hello, World";
+
 
     /** Séparateur de colonnes du CSV. */
     private final char separator = ',';
@@ -97,8 +99,6 @@ public class FileWriterTest {
         meta.set(MetaDTO.ALBUM, album);
         return meta;
     }
-
-//    Cas de base
 
     /**
      * Avec {@code withHeader = true}, l'en-tête est écrit avant la ligne du DTO.
@@ -164,8 +164,6 @@ public class FileWriterTest {
         assertEquals(csv1 + newLine, out.toString());
     }
 
-//    Cas limites
-
     /**
      * Cas limite : un champ absent du DTO donne une case vide,
      * sans décaler les colonnes suivantes.
@@ -206,17 +204,15 @@ public class FileWriterTest {
     public void quotesValueContainingComma() throws IOException {
         StringWriter out = new StringWriter();
 
-        writer.write(out, createMeta(title, author, date, album), false);
+        writer.write(out, createMeta(title5, author, date, album), false);
 
         // title5 contient une virgule : il doit être entouré de guillemets
-        String expected = "\"" + title + "\"" +
+        String expected = "\"" + title5 + "\"" +
                 separator + author +
                 separator + date +
                 separator + album;
         assertEquals(expected + newLine, out.toString());
     }
-
-//    Cas d'erreur
 
     /**
      * Un writer {@code null} est refusé avec une {@link NullPointerException}.
