@@ -1,6 +1,6 @@
 /**
  * @file RemoveCommand.java
- * @brief Définition de la commande de gestion de l'historique CSV.
+ * @brief Définition de la commande de suppression des métadonnées.
  */
 package com.dai;
 
