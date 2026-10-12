@@ -1,6 +1,5 @@
 /**
- * @file TransferCommand.java
- * @brief Définition de la commande d'export des métadonnées.
+ * Définition de la commande d'export des métadonnées.
  */
 package com.dai;
 
@@ -31,19 +30,19 @@ public class TransferCommand implements Runnable {
             List.of(MetaDTO.TITLE, MetaDTO.AUTHOR, MetaDTO.DATE, MetaDTO.ALBUM);
 
     /**
-     * @brief Le chemin du fichier source, récupéré depuis le premier argument CLI.
+     * Le chemin du fichier source, récupéré depuis le premier argument CLI.
      */
     @CommandLine.Parameters(index = "0", description = "Le fichier source à lire.")
     String sourcePath;
 
     /**
-     * @brief Le chemin du fichier CSV de destination, récupéré depuis le second argument CLI.
+     * Le chemin du fichier CSV de destination, récupéré depuis le second argument CLI.
      */
     @CommandLine.Parameters(index = "1", description = "Le fichier CSV de destination.")
     String destPath;
 
     /**
-     * @brief Point d'entrée de la commande d'export.
+     * Point d'entrée de la commande d'export.
      *
      * Lit le fichier source, extrait le DTO, puis écrit les métadonnées dans le CSV.
      */
@@ -80,7 +79,7 @@ public class TransferCommand implements Runnable {
     }
 
     /**
-     * @brief Affiche le détail des métadonnées effectivement exportées.
+     * Affiche le détail des métadonnées effectivement exportées.
      *
      * @param source le fichier source
      * @param output le fichier CSV de sortie
