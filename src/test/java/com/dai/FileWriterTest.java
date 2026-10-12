@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Utilisation de l'IA (claude) pour les corrections et la doc
  *
  * <p>Tests unitaires de {@link FileWriter}, qui écrit des {@link MetaDTO} sous forme
  * de lignes CSV ({@code title,author,date,album}).</p>

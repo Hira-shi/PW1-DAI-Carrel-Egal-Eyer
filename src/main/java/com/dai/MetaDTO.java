@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * La javadoc est faite par l'ia
  *
  * <p>Représentation neutre (indépendante du format) de toutes les métadonnées d'un fichier,
  * sous forme de paires nom &rarr; valeur.</p>
