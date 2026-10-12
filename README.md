@@ -1,6 +1,6 @@
 # metadata-cli
 
-_Projet DAI — Chapitre 04 : Java I/O — Groupe 7._
+_DAI - Pratical Work 1 : Java I/O — Groupe 7._
 
 #### Auteurs
 
@@ -15,12 +15,13 @@ _Projet DAI — Chapitre 04 : Java I/O — Groupe 7._
 * Manipuler les flux Java I/O
 * Garantir la portabilité multiplateforme
 
-## Dépendances nécessaires au projet :
-    * Picocli (`info.picocli:picocli`) : routage des arguments de la ligne de commande et affichage de l'aide.
-    * Apache Tika (`org.apache.tika:tika-core` et `tika-parsers-standard-package`) : extraction et détection des métadonnées.
-    * JUnit 5 (`org.junit.jupiter:junit-jupiter`) : tests unitaires automatisés.
+#### Dépendances nécessaires au projet :
+    
+* Picocli (`info.picocli:picocli`) : routage des arguments de la ligne de commande et affichage de l'aide.
+* Apache Tika (`org.apache.tika:tika-core` et `tika-parsers-standard-package`) : extraction et détection des métadonnées.
+* JUnit 5 (`org.junit.jupiter:junit-jupiter`) : tests unitaires automatisés.
 
-## Instructions du Travail Pratique
+#### Instructions du Travail Pratique
 
 Développer une application en ligne de commande permettant d'extraire, d'archiver et de gérer les métadonnées de fichiers multimédias dans un historique structuré.
 
@@ -37,7 +38,7 @@ Développer une application en ligne de commande permettant d'extraire, d'archiv
 * Les caractères spéciaux tels que les virgules et les guillemets doivent être échappés par doublement des guillemets.
 
 
-## Compilation et exécution
+#### Compilation et exécution
 
 - Cloner le dépôt :
 ```bash
@@ -50,7 +51,7 @@ cd PW1-DAI-Carrel-Egal-Eyer
 ```
 Le fichier JAR exécutable est produit sous `target/PW1-DAI-Carrrel-Egal-Eyer-1.0-SNAPSHOT.jar`.
 
-## Guide d'utilisation
+#### Guide d'utilisation
 
 - Extraire des métadonnées vers un journal CSV :
 ```bash
@@ -78,7 +79,7 @@ chmod +x test.sh
 ```
 _Pour Windows: Utliser Git Bash si vous souhaitez utiliser le script_
 
-## Utilisation de l'IA
+#### Utilisation de l'IA
 
 Conformément aux directives du laboratoire concernant les sources et l'utilisation de l'IA, nous avons utilisé des modèles d'intelligence artificielle (Claude, Gemini, etc.) en tant qu'assistants de développement pour les tâches suivantes :
 - **Débogage Maven :** Aide à la résolution de l'erreur `SecurityException: Invalid signature file digest` via la configuration du filtre `maven-shade-plugin`.
