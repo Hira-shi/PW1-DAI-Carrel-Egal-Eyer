@@ -1,6 +1,5 @@
 /**
- * @file InterfaceReader.java
- * @brief Classe responsable de la lecture et de l'extraction des métadonnées.
+ * Classe responsable de la lecture et de l'extraction des métadonnées.
  */
 package com.dai;
 
@@ -16,15 +15,14 @@ import java.io.InputStream;
 
 
 /**
- * @class InterfaceReader
- * @brief Lit un fichier pour détecter son format et extraire son contenu.
+ * Lit un fichier pour détecter son format et extraire son contenu.
  */
 public class InterfaceReader {
 
     private final Parser parser = new AutoDetectParser();
 
     /**
-     * @brief Extrait les métadonnées structurées d'un flux vers un {@link MetaDTO}.
+     * Extrait les métadonnées structurées d'un flux vers un {@link MetaDTO}.
      *
      * @param in le flux du fichier source (déjà ouvert)
      * @return le DTO des métadonnées extraites (peut être vide)

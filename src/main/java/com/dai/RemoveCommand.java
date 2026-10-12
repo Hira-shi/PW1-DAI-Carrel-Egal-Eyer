@@ -1,6 +1,5 @@
 /**
- * @file RemoveCommand.java
- * @brief Définition de la commande de gestion de l'historique CSV.
+ * Définition de la commande de gestion de l'historique CSV.
  */
 package com.dai;
 
@@ -10,8 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * @class RemoveCommand
- * @brief Commande CLI pour nettoyer ou supprimer le fichier CSV d'historique.
+ * Commande CLI pour nettoyer ou supprimer le fichier CSV d'historique.
  * <p>
  * Implémente l'interface Runnable pour Picocli afin d'exécuter la logique
  * de suppression ou de réinitialisation lorsqu'elle est appelée via le terminal.
@@ -22,26 +20,26 @@ public class RemoveCommand implements Runnable {
 
 
     /**
-     * @brief Le chemin du fichier cible, récupéré depuis le premier argument CLI.
+     * Le chemin du fichier cible, récupéré depuis le premier argument CLI.
      */
     @CommandLine.Parameters(index = "0", description = "Le fichier CSV à nettoyer.")
     String filePath;
 
     /**
-     * @brief Option (flag) pour supprimer physiquement le fichier CSV du disque.
+     * Option (flag) pour supprimer physiquement le fichier CSV du disque.
      */
     @CommandLine.Option(names = {"-d", "--delete"}, description = "Supprime complètement le fichier CSV du disque.")
     boolean delete;
 
     /**
-     * @brief Option (flag) pour vider le contenu du fichier tout en conservant l'en-tête.
+     * Option (flag) pour vider le contenu du fichier tout en conservant l'en-tête.
      *
      */
     @CommandLine.Option(names = {"-c", "--clear"}, description = "Vide le contenu du fichier (conserve uniquement l'en-tête).")
     boolean clear;
 
     /**
-     * @brief Point d'entrée de la commande de suppression.
+     * Point d'entrée de la commande de suppression.
      * <p>
      * Exécute la logique de suppression totale ou de vidage du fichier selon l'option choisie.
      * </p>

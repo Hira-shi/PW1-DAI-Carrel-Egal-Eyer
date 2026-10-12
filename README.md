@@ -51,7 +51,7 @@ cd PW1-DAI-Carrel-Egal-Eyer
 ```
 Le fichier JAR exécutable est produit sous `target/PW1-DAI-Carrrel-Egal-Eyer-1.0-SNAPSHOT.jar`.
 
-#### Guide d'utilisation
+### Guide d'utilisation
 
 - Extraire des métadonnées vers un journal CSV :
 ```bash
@@ -79,7 +79,7 @@ chmod +x test.sh
 ```
 _Pour Windows: Utliser Git Bash si vous souhaitez utiliser le script_
 
-#### Utilisation de l'IA
+### Utilisation de l'IA
 
 Conformément aux directives du laboratoire concernant les sources et l'utilisation de l'IA, nous avons utilisé des modèles d'intelligence artificielle (Claude, Gemini, etc.) en tant qu'assistants de développement pour les tâches suivantes :
 - **Débogage Maven :** Aide à la résolution de l'erreur `SecurityException: Invalid signature file digest` via la configuration du filtre `maven-shade-plugin`.
