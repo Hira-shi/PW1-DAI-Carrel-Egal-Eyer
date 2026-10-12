@@ -7,13 +7,15 @@ package com.dai;
 import picocli.CommandLine;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,17 +49,17 @@ public class TransferCommand implements Runnable {
      */
     @Override
     public void run() {
-        Path source = Path.of(sourcePath);
-        Path output = Path.of(destPath);
+        File source = new File(sourcePath);
+        File output = new File(destPath);
 
-        if (!Files.exists(source)) {
+        if (!source.exists()) {
             System.err.println("Erreur : le fichier source n'existe pas : " + source);
             return;
         }
 
         try {
             MetaDTO meta;
-            try (InputStream in = new BufferedInputStream(Files.newInputStream(source))) {
+            try (InputStream in = new BufferedInputStream(new FileInputStream(source))) {
                 meta = new InterfaceReader().extractMetadata(in);
             }
 
@@ -65,9 +67,9 @@ public class TransferCommand implements Runnable {
                 System.err.println("Avertissement : aucune métadonnée reconnue dans " + source);
             }
 
-            boolean needsHeader = !Files.exists(output);
-            try (Writer out = Files.newBufferedWriter(output, StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+            boolean needsHeader = !output.exists();
+            try (Writer out = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream(output, true), StandardCharsets.UTF_8))) {
                 new FileWriter().write(out, meta, needsHeader);
             }
 
@@ -84,7 +86,7 @@ public class TransferCommand implements Runnable {
      * @param output le fichier CSV de sortie
      * @param meta les métadonnées extraites
      */
-    private static void printExportSummary(Path source, Path output, MetaDTO meta) {
+    private static void printExportSummary(File source, File output, MetaDTO meta) {
         List<String> lines = new ArrayList<>();
         for (String field : EXPORTED_FIELDS) {
             String value = meta.get(field);

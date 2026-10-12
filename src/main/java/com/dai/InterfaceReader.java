@@ -5,7 +5,6 @@
 package com.dai;
 
 import java.io.IOException;
-import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -22,7 +21,6 @@ import java.io.InputStream;
  */
 public class InterfaceReader {
 
-    private final Tika tika = new Tika();
     private final Parser parser = new AutoDetectParser();
 
     /**

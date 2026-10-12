@@ -5,10 +5,9 @@
 package com.dai;
 
 import picocli.CommandLine;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 /**
  * @class RemoveCommand
@@ -49,9 +48,9 @@ public class RemoveCommand implements Runnable {
      */
     @Override
     public void run() {
-        Path path = Path.of(filePath);
+        File file = new File(filePath);
 
-        if (!Files.exists(path)) {
+        if (!file.exists()) {
             // System.err.printf écrit dans la sortie d'erreur suggérée par IntelliJ
             System.err.printf("Le fichier n'existe pas : %s%n", filePath);
             return;
@@ -69,14 +68,19 @@ public class RemoveCommand implements Runnable {
 
         try {
             if (delete) {
-                Files.deleteIfExists(path);
+                if (!file.delete()) {
+                    System.err.printf("Erreur : impossible de supprimer le fichier %s%n", filePath);
+                    return;
+                }
                 // Utilisation de printf suggérée par IntelliJ
                 System.out.printf("Suppression totale réussie : %s%n", filePath);
             } else {
                 //'clear' est forcément vrai grâce aux vérifications précédentes
                 //  Ecrase le fichier et remet l'entête
                 String header = "title,author,date,album\n";
-                Files.writeString(path, header, StandardOpenOption.TRUNCATE_EXISTING);
+                try (FileWriter out = new FileWriter(file, false)) {
+                    out.write(header);
+                }
                 System.out.printf("Le fichier a été vidé avec succès : %s%n", filePath);
             }
         } catch (IOException e) {
