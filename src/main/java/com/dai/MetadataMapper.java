@@ -3,8 +3,7 @@ package com.dai;
 import org.apache.tika.metadata.Metadata;
 
 /**
- * @file MetadataMapper.java
- * @brief Traduit les métadonnées brutes d'Apache Tika vers le DTO.
+ * Traduit les métadonnées brutes d'Apache Tika vers le DTO.
  * <p>
  * Tika expose les champs sous plusieurs clés selon le format et le parseur
  * (par exemple {@code title}, {@code dc:title}, {@code xmpDM:artist}...). Cette classe

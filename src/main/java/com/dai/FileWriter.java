@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @class FileWriter
- * @brief Formate et écrit les métadonnées extraites dans un flux de sortie.
+ * Formate et écrit les métadonnées extraites dans un flux de sortie.
  */
 public class FileWriter {
 
@@ -36,7 +35,7 @@ public class FileWriter {
     }
 
     /**
-     * @brief Nettoie un champ pour l'insertion dans un CSV.
+     * Nettoie un champ pour l'insertion dans un CSV.
      * Prépare un champ pour le CSV : case vide si absent, guillemets si la valeur
      * contient le séparateur ou un guillemet (guillemets internes échappés).
      *
