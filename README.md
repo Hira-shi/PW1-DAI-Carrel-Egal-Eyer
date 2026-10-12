@@ -80,9 +80,9 @@ _Pour Windows: Utliser Git Bash si vous souhaitez utiliser le script_
 
 ## Utilisation de l'IA
 
-Conformément aux directives de laboratoire concernant les sources et l'utilisation de l'IA, nous avons utilisé des modèles d'intelligence artificielle (Gemini, Claude, ect..) en tant qu'assistants de développement pour les tâches suivantes :
+Conformément aux directives du laboratoire concernant les sources et l'utilisation de l'IA, nous avons utilisé des modèles d'intelligence artificielle (Claude, Gemini, etc.) en tant qu'assistants de développement pour les tâches suivantes :
 - **Débogage Maven :** Aide à la résolution de l'erreur `SecurityException: Invalid signature file digest` via la configuration du filtre `maven-shade-plugin`.
-- **Automatisation :** Génération de la base du script Bash (`test.sh`) pour automatiser nos tests de validation.
-- **Documentation :** Aide à la mise en forme du présent README et à la correction de la syntaxe des balises Javadoc (passage des balises C++ Doxygen vers Java).
+- **Tests et Automatisation :** Aide à la structuration des tests unitaires (notamment `FileWriterTest.java`) et génération de la base du script Bash (`test.sh`) pour automatiser notre validation.
+- **Documentation :** Aide à la mise en forme du présent README, rédaction partielle de la Javadoc et correction de la syntaxe des balises (passage du format C++ Doxygen vers les standards Java).
 
-La logique de l'application (utilisation de l'API Java I/O native `BufferedInputStream`, `BufferedWriter`, `Files.newBufferedWriter`, etc.) a été conçue, écrite et maîtrisée par les membres de l'équipe conformément aux exigences du Chapitre 4.
+La logique de l'application (utilisation de l'API Java I/O native `BufferedInputStream`, `BufferedWriter`, `Files.newBufferedWriter`, etc.) a été conçue, écrite et maîtrisée par les membres de l'équipe.
